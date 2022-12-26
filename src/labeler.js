@@ -23,7 +23,9 @@ exports.pullRequestAutoLabel = async function pullRequestAutoLabel() {
       issue_number: pullRequest.number,
       labels: [Constants.Hotfix],
     });
-  } else if (pullRequest.head.ref.startsWith("release/")) {
+  } else if (
+    pullRequest.head.ref.startsWith(`${Constants.ReleaseBranchPrefix}/`)
+  ) {
     await octokit.rest.issues.addLabels({
       ...Config.repo,
       issue_number: pullRequest.number,
