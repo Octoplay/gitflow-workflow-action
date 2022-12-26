@@ -43,7 +43,9 @@ exports.executeOnRelease = async function executeOnRelease() {
      */
 
     core.setOutput("result", "release");
-    version = currentBranch.substring(`${Constants.ReleaseBranchPrefix}/`.length);
+    version = currentBranch.substring(
+      `${Constants.ReleaseBranchPrefix}/`.length
+    );
   } else if (releaseCandidateType === "hotfix") {
     /**
      * Creating a hotfix release
