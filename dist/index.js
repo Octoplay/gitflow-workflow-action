@@ -19087,7 +19087,7 @@ function wrappy (fn, cb) {
 exports.Constants = {
   Release: "release",
   Hotfix: "hotfix",
-  ReleaseBranchPrefix: "releases",
+  ReleaseBranchPrefix: "release",
 };
 
 
