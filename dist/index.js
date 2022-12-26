@@ -19087,7 +19087,6 @@ function wrappy (fn, cb) {
 exports.Constants = {
   Release: "release",
   Hotfix: "hotfix",
-  ReleaseBranchPrefix: "releases",
 };
 
 
@@ -19183,9 +19182,7 @@ exports.pullRequestAutoLabel = async function pullRequestAutoLabel() {
       issue_number: pullRequest.number,
       labels: [Constants.Hotfix],
     });
-  } else if (
-    pullRequest.head.ref.startsWith(`${Constants.ReleaseBranchPrefix}/`)
-  ) {
+  } else if (pullRequest.head.ref.startsWith("release/")) {
     await octokit.rest.issues.addLabels({
       ...Config.repo,
       issue_number: pullRequest.number,
@@ -19226,7 +19223,6 @@ exports.pullRequestLabelExplainer = async function labelExplainer() {
 const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
 const assert = __nccwpck_require__(9491);
-const { Constants } = __nccwpck_require__(4438);
 const { sendToSlack } = __nccwpck_require__(3738);
 const { Config, octokit } = __nccwpck_require__(9297);
 const { tryMerge, isReleaseCandidate } = __nccwpck_require__(1608);
@@ -19267,9 +19263,7 @@ exports.executeOnRelease = async function executeOnRelease() {
      */
 
     core.setOutput("result", "release");
-    version = currentBranch.substring(
-      `${Constants.ReleaseBranchPrefix}/`.length
-    );
+    version = currentBranch.substring("release/".length);
   } else if (releaseCandidateType === "hotfix") {
     /**
      * Creating a hotfix release
@@ -19382,7 +19376,7 @@ exports.createReleasePR = async function createReleasePR() {
   });
 
   console.log(`create_release: Creating release branch`);
-  const releaseBranch = `${Constants.ReleaseBranchPrefix}/${version}`;
+  const releaseBranch = `release/${version}`;
 
   const developBranchSha = (
     await octokit.rest.repos.getBranch({
@@ -19502,8 +19496,8 @@ See [Gitflow Workflow](https://www.atlassian.com/git/tutorials/comparing-workflo
         });
         core.summary
           .addHeading("Back-merge", 2)
-          .addRaw("A PR was created for back-merge, please review: ")
-          .addLink("here", pullRequest.html_url);
+          .addRaw("A PR was created for back-merge, please review:")
+          .addLink("Back-merge PR", pullRequest.html_url);
       } catch (error) {
         core.error(
           `Couldn't perform back-merge! Merge error: ${err}, PR error ${error}`

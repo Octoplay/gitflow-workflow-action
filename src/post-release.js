@@ -2,7 +2,6 @@
 const core = require("@actions/core");
 const github = require("@actions/github");
 const assert = require("assert");
-const { Constants } = require("./constants.js");
 const { sendToSlack } = require("./integration-slack.js");
 const { Config, octokit } = require("./shared.js");
 const { tryMerge, isReleaseCandidate } = require("./utils.js");
@@ -43,9 +42,7 @@ exports.executeOnRelease = async function executeOnRelease() {
      */
 
     core.setOutput("result", "release");
-    version = currentBranch.substring(
-      `${Constants.ReleaseBranchPrefix}/`.length
-    );
+    version = currentBranch.substring("release/".length);
   } else if (releaseCandidateType === "hotfix") {
     /**
      * Creating a hotfix release
